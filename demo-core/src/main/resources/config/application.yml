@@ -1,0 +1,28 @@
+multi:
+  ds:
+    data-sources:
+      - dsKey: ds1
+        username: sa
+        driverClass: org.h2.Driver
+        url: jdbc:h2:mem:h2test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      - dsKey: ds2
+        username: sa
+        driverClass: org.h2.Driver
+        url: jdbc:h2:mem:h2test2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    primary-key: ds1
+  mongodb:
+    primary-key: ds1
+    mongo-db-props:
+      - dsKey: ds1
+        uri: mongodb://127.0.0.1/mro
+      - dsKey: ds2
+        uri: mongodb://127.0.0.1/mro2
+    enable: true
+
+spring:
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 127.0.0.1:9300
+  jpa:
+    open-in-view: false

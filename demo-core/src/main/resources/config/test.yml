@@ -1,0 +1,8 @@
+multi:
+  mongodb:
+    primary-key: tenant_1
+    mongo-db-props:
+      - dsKey: tenant_1
+        uri: mongodb://mrodev1:Xhyebb6711#uyq@10.0.22.23:27017/mrodev1
+      - dsKey: tenant_2
+        uri: mongodb://mrodev2:khhFG09ue#upod@10.0.22.23:27017/mrodev2

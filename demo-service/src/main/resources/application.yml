@@ -1,0 +1,15 @@
+server:
+  port: 9080
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  http:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+  h2:
+    console:
+      enabled: true
+
