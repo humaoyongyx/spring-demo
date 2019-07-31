@@ -1,4 +1,4 @@
-package issac.study.springdemo.core.utils;
+package issac.study.springdemo.core.template;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

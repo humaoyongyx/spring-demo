@@ -1,4 +1,4 @@
-package issac.study.springdemo.core.utils;
+package issac.study.springdemo.core.template;
 
 import org.springframework.data.jpa.domain.Specification;
 

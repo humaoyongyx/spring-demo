@@ -2,8 +2,11 @@ package issac.study.springdemo.service.controller;
 
 import issac.study.springdemo.service.service.EsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,9 +36,15 @@ public class EsController {
     }
 
     @RequestMapping("/index")
-    public boolean index(){
+    public boolean index(String name){
         IndexQuery indexQuery=new IndexQuery();
-        return  esService.createIndex();
+        return  esService.createIndex(name);
     }
+
+    @RequestMapping("/search")
+    public Object search(String name, @PageableDefault(page = 0, size = 50, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable){
+        return  esService.getIdeaListBySrt(name,pageable);
+    }
+
 
 }

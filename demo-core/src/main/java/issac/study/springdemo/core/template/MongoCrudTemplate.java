@@ -1,4 +1,4 @@
-package issac.study.springdemo.core.utils;
+package issac.study.springdemo.core.template;
 
 import com.alibaba.fastjson.JSON;
 import com.mongodb.BasicDBList;
@@ -432,6 +432,34 @@ public class MongoCrudTemplate {
          */
         EQ, NE, LIKE, NOT_LIKE, GT, GE, LT, LE, IN, NOT_IN, IS_NULL;
 
+        public static Operator getOperator(String operator){
+            if (StringUtils.isBlank(operator)){
+                return EQ;
+            }
+            switch (operator){
+                case "eq":
+                    return EQ;
+                case "ne":
+                    return NE;
+                case "like":
+                    return LIKE;
+                case "not_like":
+                    return NOT_LIKE;
+                case  "gt":
+                    return GT;
+                case "ge":
+                    return GE;
+                case "lt":
+                    return LT;
+                case "le":
+                    return LE;
+                case "in":
+                    return IN;
+                case "not_in":
+                    return NOT_IN;
+            }
+            return EQ;
+        }
     }
 
 }

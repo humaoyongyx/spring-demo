@@ -1,7 +1,7 @@
 package issac.study.springdemo.service.controller;
 
 import com.alibaba.fastjson.JSON;
-import issac.study.springdemo.core.utils.MongoCrudTemplate;
+import issac.study.springdemo.core.template.MongoCrudTemplate;
 import issac.study.springdemo.service.model.UserBean;
 import issac.study.springdemo.service.service.MongoService;
 import issac.study.springdemo.service.vo.SimpleVo;

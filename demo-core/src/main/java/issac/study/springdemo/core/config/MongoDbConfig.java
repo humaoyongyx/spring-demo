@@ -6,7 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import issac.study.springdemo.core.config.cache.MongoDbMapCache;
 import issac.study.springdemo.core.config.prop.MultiMongoDbProp;
 import issac.study.springdemo.core.context.ContextHolder;
-import issac.study.springdemo.core.utils.MongoCrudTemplate;
+import issac.study.springdemo.core.template.MongoCrudTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
