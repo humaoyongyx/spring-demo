@@ -19,18 +19,22 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
+ * 自定义mongo数据库动态查询类
+ *
  * @author humy6
- * @Date: 2019/7/18 14:51
  */
 
 public class MongoCrudTemplate {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoCrudTemplate.class);
 
+    /**
+     * 常量定义
+     */
     private static final String ID = "id";
     private static final String OBJECT_ID = "_id";
     private static final String EQ = "$eq";
-    private static final String NE = "$NE";
+    private static final String NE = "$ne";
     private static final String OR = "$or";
     private static final String IN = "$in";
     private static final String NIN = "$nin";
@@ -43,11 +47,18 @@ public class MongoCrudTemplate {
     private static final String NOT = "$not";
     private static final String DB_SIGN = "%";
 
+
     private MongoTemplate mongoTemplate;
 
-    public MongoCrudTemplate(MongoTemplate mongoTemplate){
-        this.mongoTemplate=mongoTemplate;
+    /**
+     * 构造
+     *
+     * @param mongoTemplate
+     */
+    public MongoCrudTemplate(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
+
     /**
      * 更新或保存
      *
@@ -79,12 +90,13 @@ public class MongoCrudTemplate {
 
     /**
      * 删除
+     *
      * @param tableName
      * @param id
      */
-    public void delete(String tableName,Integer id){
+    public void delete(String tableName, Integer id) {
         MongoCollection<Document> collection = mongoTemplate.getDb().getCollection(tableName);
-        collection.deleteOne(new BasicDBObject(ID,id));
+        collection.deleteOne(new BasicDBObject(ID, id));
     }
 
     private void save(String tableName, Document document, String... uid) {
@@ -116,7 +128,7 @@ public class MongoCrudTemplate {
         }
     }
 
-    public Optional<Document> findById(String tableName, Integer id) {
+    public Optional<Map<String,Object>> findById(String tableName, Integer id) {
         return findById(tableName, id, null);
     }
 
@@ -128,21 +140,22 @@ public class MongoCrudTemplate {
      * @param idName
      * @return
      */
-    public Optional<Document> findById(String tableName, Integer id, String idName) {
+    public Optional<Map<String,Object>> findById(String tableName, Integer id, String idName) {
         String fieldName;
         if (StringUtils.isBlank(idName)) {
             fieldName = ID;
         } else {
             fieldName = idName;
         }
-        List<Document> query = buildQuery().andEq(fieldName, id).query(tableName);
+        List<Map<String,Object>> query = buildQuery().andEq(fieldName, id).query(tableName);
         if (!query.isEmpty()) {
             return Optional.of(query.get(0));
         }
         return Optional.empty();
     }
 
-    public List<Document> findByIds(String tableName, List<Integer> ids) {
+
+    public List<Map<String,Object>> findByIds(String tableName, List<Integer> ids) {
         return findByIds(tableName, ids, null);
     }
 
@@ -152,7 +165,7 @@ public class MongoCrudTemplate {
      * @param idName    为null的话，默认为id，可以指定id的名称
      * @return
      */
-    public List<Document> findByIds(String tableName, List<Integer> ids, String idName) {
+    public List<Map<String,Object>> findByIds(String tableName, List<Integer> ids, String idName) {
 
         if (ids == null || ids.isEmpty()) {
             new ArrayList<>();
@@ -210,10 +223,10 @@ public class MongoCrudTemplate {
                 }
             }
             if (operator != Operator.IS_NULL) {
-                if (value==null){
+                if (value == null) {
                     return this;
                 }
-                if (value instanceof String){
+                if (value instanceof String) {
                     if (StringUtils.isBlank((String) value)) {
                         return this;
                     }
@@ -223,14 +236,24 @@ public class MongoCrudTemplate {
         }
 
 
+        /**
+         *   根据操作符，默认处理一些值，如like 将%转换为mongdb认识的值
+         * @param operator
+         * @param name
+         * @param value
+         * @return
+         */
         private Object resetValue(Operator operator, String name, Object value) {
 
             if (operator == Operator.LIKE || operator == Operator.NOT_LIKE) {
                 String temp = (String) value;
                 if (temp.contains(DB_SIGN)) {
+                    String temp2=temp;
                     temp = temp.replace(DB_SIGN, "");
-                    if (temp.startsWith(DB_SIGN)) {
+                    if (!temp2.startsWith(DB_SIGN)) {
                         temp = LIKE_PREFIX + temp;
+                    }else if (!temp2.endsWith(DB_SIGN)){
+                        temp =  temp+LIKE_PREFIX ;
                     }
                 } else {
                     temp = LIKE_PREFIX + temp;
@@ -238,6 +261,55 @@ public class MongoCrudTemplate {
                 value = Pattern.compile(temp, Pattern.CASE_INSENSITIVE);
             }
             return value;
+        }
+
+        /**
+         * 处理   value>=&&value<= 这种两种操作符的值，否则与操作的时候，由于是map，会自动覆盖
+         * @param name
+         * @param operator
+         * @param value
+         * @param isOr
+         * @return
+         */
+        private BasicDBObject handleBinaryOperator(String name,String operator,Object value,boolean isOr){
+            BasicDBObject result= new BasicDBObject(operator, value);
+            if (isOr){
+                if (GT.equals(operator)||GTE.equals(operator)||LT.equals(operator)||LTE.equals(operator)){
+                    Iterator<Object> iterator = this.orList.iterator();
+                    while (iterator.hasNext()){
+                        BasicDBObject item = (BasicDBObject) iterator.next();
+                        BasicDBObject existField = (BasicDBObject) item.get(name);
+                        if (existField!=null){
+                            result = appendBinaryExistField(operator, value, result, existField);
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                }
+            }else {
+                BasicDBObject existField = (BasicDBObject) this.andObject.get(name);
+                if (existField!=null){
+                    result = appendBinaryExistField(operator, value, result, existField);
+                }
+            }
+            return result;
+        }
+
+        private BasicDBObject appendBinaryExistField(String operator, Object value, BasicDBObject result, BasicDBObject existField) {
+            if (GT.equals(operator) || GTE.equals(operator)) {
+                if (existField.containsField(LT) || existField.containsField(LTE)) {
+                    if (!existField.containsField(operator)) {
+                        result = existField.append(operator, value);
+                    }
+                }
+            } else if (LT.equals(operator) || LTE.equals(operator)) {
+                if (existField.containsField(GT) || existField.containsField(GTE)) {
+                    if (!existField.containsField(operator)) {
+                        result = existField.append(operator, value);
+                    }
+                }
+            }
+            return result;
         }
 
         /**
@@ -254,7 +326,7 @@ public class MongoCrudTemplate {
                 return this;
             }
             value = resetValue(operator, name, value);
-            Object temp = new Object();
+            Object temp=null;
             switch (operator) {
                 case EQ:
                     temp = new BasicDBObject(EQ, value);
@@ -269,10 +341,10 @@ public class MongoCrudTemplate {
                     temp = new BasicDBObject(NOT, value);
                     break;
                 case LT:
-                    temp = new BasicDBObject(LT, value);
+                    temp = handleBinaryOperator(name,LT,value,isOr);
                     break;
                 case LE:
-                    temp = new BasicDBObject(LTE, value);
+                    temp =handleBinaryOperator(name,LTE,value,isOr);
                     break;
                 case IN:
                     temp = new BasicDBObject(IN, value);
@@ -281,10 +353,10 @@ public class MongoCrudTemplate {
                     temp = new BasicDBObject(NIN, value);
                     break;
                 case GT:
-                    temp = new BasicDBObject(GT, value);
+                    temp = handleBinaryOperator(name,GT,value,isOr);
                     break;
                 case GE:
-                    temp = new BasicDBObject(GTE, value);
+                    temp =handleBinaryOperator(name,GTE,value,isOr);
                     break;
                 case IS_NULL:
                     orList.add(new BasicDBObject(name, null));
@@ -304,12 +376,56 @@ public class MongoCrudTemplate {
             return this;
         }
 
+
+        /**
+         * and 快捷方法
+         *
+         * @param operator
+         * @param name
+         * @param value
+         * @return
+         */
         public Query and(Operator operator, String name, Object value) {
             return and(operator, name, value, false);
         }
 
+        /**
+         * and 操作符string的方式
+         * @param operator
+         * @param name
+         * @param value
+         * @return
+         */
+        public Query and(String operator, String name, Object value) {
+            return and(Operator.getOperator(operator), name, value, false);
+        }
+
+
+        public Query andOverride(Operator operator, String name, Object value){
+            this.andObject.put(name,null);
+            return and(operator, name, value, false);
+        }
+        /**
+         * or 快捷方法
+         *
+         * @param operator
+         * @param name
+         * @param value
+         * @return
+         */
         public Query or(Operator operator, String name, Object value) {
             return and(operator, name, value, true);
+        }
+
+        /**
+         * or 操作符string的方式
+         * @param operator
+         * @param name
+         * @param value
+         * @return
+         */
+        public Query or(String operator, String name, Object value) {
+            return and(Operator.getOperator(operator), name, value, true);
         }
 
         public Query andEq(String name, Object value) {
@@ -319,7 +435,6 @@ public class MongoCrudTemplate {
         public Query andIn(String name, Object value) {
             return and(Operator.IN, name, value);
         }
-
 
         public Query andLike(String name, Object value) {
             return and(Operator.LIKE, name, value);
@@ -376,7 +491,7 @@ public class MongoCrudTemplate {
          * @param pageable  分页，为null不分页
          * @return
          */
-        public List<Document> query(String tableName, Pageable pageable) {
+        public List<Map<String,Object>> query(String tableName, Pageable pageable) {
             if (!orList.isEmpty()) {
                 andObject.put(OR, orList);
             }
@@ -392,7 +507,7 @@ public class MongoCrudTemplate {
                 });
                 documents.sort(sortObject).skip(skip).limit(limit);
             }
-            List<Document> result = new ArrayList<>();
+            List<Map<String,Object>> result = new ArrayList<>();
             MongoCursor<Document> iterator = documents.iterator();
             while (iterator.hasNext()) {
                 result.add(iterator.next());
@@ -400,11 +515,13 @@ public class MongoCrudTemplate {
             return result;
         }
 
-        public List<Document> query(String tableName) {
+        public List<Map<String,Object>> query(String tableName) {
             return query(tableName, null);
         }
+
         /**
          * 获取总数
+         *
          * @param tableName
          * @return
          */
@@ -432,6 +549,12 @@ public class MongoCrudTemplate {
          */
         EQ, NE, LIKE, NOT_LIKE, GT, GE, LT, LE, IN, NOT_IN, IS_NULL;
 
+
+        /**
+         *  根据字符串，返回枚举类型的operator
+         * @param operator
+         * @return
+         */
         public static Operator getOperator(String operator){
             if (StringUtils.isBlank(operator)){
                 return EQ;
@@ -460,6 +583,7 @@ public class MongoCrudTemplate {
             }
             return EQ;
         }
+
     }
 
 }

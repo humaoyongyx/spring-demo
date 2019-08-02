@@ -45,6 +45,14 @@ public class EsController {
     public Object search(String name, @PageableDefault(page = 0, size = 50, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable){
         return  esService.getIdeaListBySrt(name,pageable);
     }
+    @RequestMapping("/save2")
+    public void save2( ){
+         esService.save();
+    }
+    @RequestMapping("/del")
+    public void del( ){
+        esService.delete();
+    }
 
 
 }

@@ -16,6 +16,7 @@ public class EsBean {
     /**
      * 使用高亮必须指定这个字段，然后自定义一个pojo Highlight 对象，程序会自动将名称中的.和_替换为字母大写
      */
+
     private Highlight highlight;
 
     public Integer getId() {

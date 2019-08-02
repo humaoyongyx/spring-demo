@@ -2,6 +2,8 @@ package issac.study.springdemo.service.controller;
 
 import issac.study.springdemo.core.config.cache.DataSourceMapCache;
 import issac.study.springdemo.core.config.cache.MongoDbMapCache;
+import issac.study.springdemo.service.model.UserBean;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +21,11 @@ public class TestController {
         MongoDbMapCache.addTest();
         return DataSourceMapCache.getDataSourceMap().keySet();
     }
+    @RequestMapping("/json")
+    public Object testJson(@RequestBody UserBean userBean){
+        return userBean;
+    }
+
+
 
 }

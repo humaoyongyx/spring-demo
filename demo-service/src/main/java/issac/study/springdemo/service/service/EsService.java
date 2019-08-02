@@ -62,4 +62,15 @@ public class EsService {
         Page page = esCrudTemplate.pageHighlight(searchQuery,EsBean.class);
         return page;
     }
+
+    public void save(){
+       EsBean esBean=new EsBean();
+       esBean.setId(10);
+       esBean.setName("测试multi");
+       esCrudTemplate.save(esBean);
+    }
+    public void delete(){
+        esCrudTemplate.delete(10+"");
+    }
+
 }

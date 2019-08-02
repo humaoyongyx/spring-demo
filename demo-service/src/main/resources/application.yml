@@ -2,7 +2,6 @@ server:
   port: 9080
   tomcat:
     uri-encoding: UTF-8
-
 spring:
   http:
     encoding:
@@ -12,4 +11,6 @@ spring:
   h2:
     console:
       enabled: true
+  application:
+    name: demo-core
 

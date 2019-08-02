@@ -85,7 +85,7 @@ public class MongoDbController {
 
     @RequestMapping("/test")
     public Object test(@PageableDefault(page = 0, size = 50, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable, String test){
-        return mongoCrudTemplate.buildQuery().orLike("name","小").orGe("date","2019-07-23 10:00:00").query("tb1",pageable);
+        return mongoCrudTemplate.buildQuery().orLike("name","测").orLike("name","小").andGe("date","2019-07-23 15:06:06").andLe("date","2019-07-23 15:06:06").query("tb1",pageable);
     }
     @RequestMapping("/total")
     public Object total(@PageableDefault(page = 0, size = 50, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable, String test){
