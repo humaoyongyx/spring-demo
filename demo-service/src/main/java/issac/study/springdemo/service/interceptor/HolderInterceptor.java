@@ -11,7 +11,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 
 /**
  * @author humy6
@@ -29,7 +28,6 @@ public class HolderInterceptor implements HandlerInterceptor {
         User user = User.builder().id(1).dsKey(multiDataSourceProp.getPrimaryKey()).build();
 
         String dsKey = request.getParameter("dsKey");
-        String locale = request.getParameter("locale");
         /**
          * 切换数据源
          */
@@ -38,11 +36,6 @@ public class HolderInterceptor implements HandlerInterceptor {
                 user.setDsKey(dsKey);
             }else {
                 throw  new  RuntimeException("数据源不存在！");
-            }
-        }
-        if (StringUtils.isNotBlank(locale)){
-            if ("en".equals(locale)){
-                user.setLocale(Locale.US);
             }
         }
         ContextHolder.setUser(user);

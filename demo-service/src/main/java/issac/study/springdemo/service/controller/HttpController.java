@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class HttpController {
         return httpClientHelper.get("https://localhost");
     }
 
+    @NotNull
     @RequestMapping("/2")
     public String test2(){
         Map<String, String> headers = new HashMap<>();
