@@ -45,6 +45,7 @@ public class MessageConfig {
     @Bean
     LocaleResolver localeResolver(){
         AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
+        acceptHeaderLocaleResolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
         return new LocaleResolver() {
             @Override
             public Locale resolveLocale(HttpServletRequest request) {

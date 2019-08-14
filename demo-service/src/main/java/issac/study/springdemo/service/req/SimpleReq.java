@@ -1,4 +1,4 @@
-package issac.study.springdemo.service.model;
+package issac.study.springdemo.service.req;
 
 import issac.study.springdemo.core.validator.annotation.DateValidator;
 

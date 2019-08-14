@@ -33,7 +33,6 @@ public class DateValidatorConstraint implements ConstraintValidator<DateValidato
            try {
                dateTimeFormatter.parse(value);
            }catch (Exception e){
-               String defaultMessage = context.getDefaultConstraintMessageTemplate();
                String message = messageSource.getMessage("core.validator.date.message", new Object[]{this.formatter}, LocaleContextHolder.getLocale());
                context.disableDefaultConstraintViolation();
                context.buildConstraintViolationWithTemplate(message).addConstraintViolation();

@@ -19,8 +19,10 @@ public class ValidatorUtils {
 
     public String formatMessage(BindException bindException){
         FieldError fieldError = bindException.getBindingResult().getFieldError();
-        String message = messageSource.getMessage("core.validator.format.message", new Object[]{fieldError.getField(), fieldError.getRejectedValue(), fieldError.getDefaultMessage()}, LocaleContextHolder.getLocale());
+        String message = messageSource.getMessage("core.validator.format.message", new Object[]{fieldError.getField(), fieldError.getRejectedValue(), MessageUtils.get(fieldError.getDefaultMessage())}, LocaleContextHolder.getLocale());
         return message;
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package issac.study.springdemo.core.config.es;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
@@ -10,6 +11,7 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
  * @Date: 2019/7/31 10:09
  */
 @Configuration
+@ConditionalOnClass(ElasticsearchConverter.class)
 @EnableElasticsearchRepositories
 public class EsConfig {
 /*

@@ -2,6 +2,7 @@ package issac.study.springdemo.core.template;
 
 import issac.study.springdemo.core.config.es.MyResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.DeleteQuery;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@ConditionalOnClass(ElasticsearchTemplate.class)
 public class EsCrudTemplate {
 
     @Autowired

@@ -1,6 +1,6 @@
 package issac.study.springdemo.service.controller;
 
-import issac.study.springdemo.service.model.SimpleReq;
+import issac.study.springdemo.service.req.SimpleReq;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
