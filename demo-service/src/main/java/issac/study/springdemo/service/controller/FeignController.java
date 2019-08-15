@@ -17,7 +17,8 @@ import java.util.List;
 public class FeignController {
 
     @GetMapping("/{id}")
-    public UserVo getById(@PathVariable("id") Integer id){
+    public UserVo getById(@PathVariable("id") Integer id) throws InterruptedException {
+        Thread.sleep(1000);
                return new UserVo(id,"name"+Math.random());
     }
 

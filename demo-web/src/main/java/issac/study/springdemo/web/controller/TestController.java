@@ -21,4 +21,9 @@ public class TestController {
     public Object test(){
            return userFeignClient.getList(new UserReq(1,"11"),new PageReq(1,2));
     }
+
+    @RequestMapping("/2")
+    public Object test2(){
+        return userFeignClient.getById(1);
+    }
 }

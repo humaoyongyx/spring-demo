@@ -22,6 +22,7 @@
          <module>demo-eureka</module>
          <module>demo-web</module>
          <module>demo-model</module>
+         <module>demo-config</module>
          <module>demo-test</module>
      </modules>
 
@@ -58,6 +59,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 

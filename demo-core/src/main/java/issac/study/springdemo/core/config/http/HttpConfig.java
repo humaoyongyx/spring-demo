@@ -59,7 +59,7 @@ public class HttpConfig {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{x509TrustManager}, new SecureRandom());
         ConnectionPool connectionPool = new ConnectionPool(50, 5, TimeUnit.MINUTES);
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(LOGGER::debug);
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(LOGGER::info);
         //打印请求链路，debug级别
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return new OkHttpClient.Builder()
