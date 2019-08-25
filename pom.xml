@@ -24,6 +24,7 @@
          <module>demo-model</module>
          <module>demo-config</module>
          <module>demo-test</module>
+         <module>demo-gateway</module>
      </modules>
 
     <properties>
