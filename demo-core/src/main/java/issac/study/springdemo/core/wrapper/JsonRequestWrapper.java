@@ -15,9 +15,20 @@ public class JsonRequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] body;
 
-    public JsonRequestWrapper(HttpServletRequest request) throws IOException {
+    public JsonRequestWrapper(HttpServletRequest request){
         super(request);
-        body = StreamUtils.copyToByteArray(request.getInputStream());
+            body =getBody(request);
+
+    }
+
+    public  static byte[]  getBody(HttpServletRequest request)  {
+        byte[] temp=null;
+        try {
+            temp=StreamUtils.copyToByteArray(request.getInputStream());
+        } catch (IOException e) {
+            temp=new byte[0];
+        }
+        return temp;
     }
 
     @Override

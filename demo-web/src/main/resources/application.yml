@@ -29,5 +29,6 @@ management:
 #demo-service:
 #      ribbon:
 #        ReadTimeout: 3000
-
-
+logging:
+  level:
+      issac.study.springdemo: debug

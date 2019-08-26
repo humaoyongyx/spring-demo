@@ -10,11 +10,18 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Configuration
 @EnableFeignClients(basePackages = {"issac.study.springdemo"})
 public class FeignConfig {
+
+    private  static final Set<String> includeHeads=new HashSet<>();
+    static {
+             includeHeads.add("token");
+    }
 
     @Bean
     public RequestInterceptor headerInterceptor() {
@@ -28,7 +35,9 @@ public class FeignConfig {
                     while (headerNames.hasMoreElements()) {
                         String name = headerNames.nextElement();
                         String values = request.getHeader(name);
-                        requestTemplate.header(name, values);
+                        if (includeHeads.contains(name.toLowerCase())){
+                            requestTemplate.header(name, values);
+                        }
                     }
                 }
             }

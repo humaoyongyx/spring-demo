@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author humy6
@@ -36,6 +38,11 @@ public class LogInterceptor implements HandlerInterceptor , ResponseBodyAdvice {
 
     private static final String CONTENT_TYPE_JSON="application/json";
 
+    private static final List<String> includeMethods=new ArrayList<>();
+    static {
+        includeMethods.add("post");
+        includeMethods.add("put");
+    }
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String methodName="";
@@ -43,12 +50,16 @@ public class LogInterceptor implements HandlerInterceptor , ResponseBodyAdvice {
             Method method = ((HandlerMethod) handler).getMethod();
             methodName=method.getDeclaringClass().getSimpleName() +"."+method.getName();
         }
-        LOGGER.info("request : {} {} [{}]",request.getMethod(),request.getRequestURI(),methodName);
+        String method = request.getMethod();
+        LOGGER.info("request : {} {} [{}]", method,request.getRequestURI(),methodName);
         LOGGER.info("params : {}",getParameters(request));
         String contentType = request.getContentType();
         if (StringUtils.isNotBlank(contentType) && contentType.contains(CONTENT_TYPE_JSON)){
-            String jsonBody = StreamUtils.copyToString(request.getInputStream(), Charset.forName("utf-8"));
-            LOGGER.info("params json : \n{}",jsonBody);
+           if (includeMethods.contains(method.toLowerCase())){
+               String jsonBody = StreamUtils.copyToString(request.getInputStream(), Charset.forName("utf-8"));
+               LOGGER.info("params json : \n{}",jsonBody);
+           }
+
         }
         return true;
     }

@@ -28,9 +28,8 @@ spring:
     open-in-view: false
 
 ribbon:
-   ReadTimeout: 3000
-   ConnectTimeout: 3000
+    ReadTimeout: 10000
+    ConnectTimeout: 5000
 feign:
   okhttp:
     enabled: true
-
