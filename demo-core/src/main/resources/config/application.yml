@@ -26,6 +26,9 @@ spring:
       cluster-nodes: 127.0.0.1:9300
   jpa:
     open-in-view: false
+  redis:
+    host: 192.168.99.100
+    port: 6379
 
 ribbon:
     ReadTimeout: 10000
@@ -33,3 +36,4 @@ ribbon:
 feign:
   okhttp:
     enabled: true
+

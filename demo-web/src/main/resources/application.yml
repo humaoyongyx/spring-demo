@@ -1,6 +1,11 @@
 server:
   port: 8080
 spring:
+  rabbitmq:
+    host: 192.168.99.100
+    port: 5672
+    username: guest
+    password: guest
   application:
     name: demo-web
   http:

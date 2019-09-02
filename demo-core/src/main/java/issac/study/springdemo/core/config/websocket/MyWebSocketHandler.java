@@ -1,5 +1,8 @@
 package issac.study.springdemo.core.config.websocket;
 
+import com.alibaba.fastjson.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
@@ -9,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MyWebSocketHandler extends AbstractWebSocketHandler {
 
+
+    private static  Logger logger= LoggerFactory.getLogger(MyWebSocketHandler.class);
     /**
     *  存储sessionId和webSocketSession
     *  需要注意的是，webSocketSession没有提供无参构造，不能进行序列化，也就不能通过redis存储
@@ -17,6 +22,12 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     public static Map<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
     public static Map<String, String> userMap = new ConcurrentHashMap<>();
 
+
+
+    private static  void printSession(){
+        logger.info(JSON.toJSONString(sessionMap.keySet()));
+        logger.info(JSON.toJSONString(userMap.keySet()));
+    }
     /**
      * webSocket连接创建后调用
      */
@@ -26,6 +37,9 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
         String user = String.valueOf(session.getAttributes().get("user"));
         userMap.put(user, session.getId());
         sessionMap.put(session.getId(), session);
+        System.out.println("im Established...");
+        logger.info("im Established...");
+        printSession();
     }
 
     /**
@@ -35,6 +49,8 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if (message instanceof TextMessage) {
             System.out.println(message);
+            logger.info("message:{}",message);
+            printSession();
         } else if (message instanceof BinaryMessage) {
             
         } else if (message instanceof PongMessage) {
@@ -50,6 +66,9 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
         sessionMap.remove(session.getId());
+        System.out.println("im wrong...");
+        logger.info("im wrong...");
+        printSession();
     }
 
     /**
@@ -58,6 +77,9 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessionMap.remove(session.getId());
+        System.out.println("im closed...");
+        logger.info("im closed...");
+        printSession();
     }
 
     @Override
@@ -70,7 +92,17 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     */
     public static void sendMessage(String user, String message) throws IOException {
         String sessionId = userMap.get(user);
+        if (sessionId==null){
+            return;
+        }
         WebSocketSession session = sessionMap.get(sessionId);
-        session.sendMessage(new TextMessage(message));
+
+        if (session !=null && session.isOpen()){
+            session.sendMessage(new TextMessage(message));
+            System.out.println("im send...");
+        }else {
+            System.out.println("im none");
+        }
+
     }
 }
