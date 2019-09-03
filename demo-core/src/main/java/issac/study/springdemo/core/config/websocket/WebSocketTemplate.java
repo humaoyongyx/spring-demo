@@ -14,8 +14,8 @@ public class WebSocketTemplate {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
-     public void sendMessage(UserMessage userMessage)  {
-         stringRedisTemplate.convertAndSend(WebSocketConstants.REDIS_CHANEL, JSON.toJSONString(userMessage));
+     public void sendMessage(Message message)  {
+         stringRedisTemplate.convertAndSend(WebSocketConstants.REDIS_CHANEL, JSON.toJSONString(message));
      }
 
 }

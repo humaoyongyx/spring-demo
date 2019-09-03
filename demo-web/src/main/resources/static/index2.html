@@ -1,0 +1,39 @@
+<h1>hello world</h1>
+
+<script>
+
+    // 打开一个 web socket
+    var ws = new WebSocket("ws://localhost/demo-web/websocket?userId=2@tenant_1");
+    ws.onopen = function() {
+        // Web Socket 已连接上，使用 send() 方法发送数据
+        ws.send("测试发送");
+        console.log('open');
+    };
+    ws.onmessage = function (e) {
+        console.log('message', e.data);
+    };
+    ws.onclose = function() {
+        console.log('close');
+    };
+    ws.onerror= function(e) {
+        console.log(e);
+        console.log('error');
+    };
+
+</script>
+
+
+<!--<script src="//cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script>
+    var sock = new SockJS('http://localhost:8080/sock-js?user=Tony');
+    sock.onopen = function() {
+        sock.send("测试发送");
+        console.log('open');
+    };
+    sock.onmessage = function(e) {
+        console.log('message', e.data);
+    };
+    sock.onclose = function() {
+        console.log('close');
+    };
+</script>-->

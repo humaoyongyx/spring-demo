@@ -1,6 +1,6 @@
 package issac.study.springdemo.core.config.websocket.message;
 
-import issac.study.springdemo.core.config.websocket.UserMessage;
+import issac.study.springdemo.core.config.websocket.Message;
 
 /**
  * @author humy6
@@ -11,5 +11,5 @@ public interface IMessageListener {
      * 消息监听接口
      * @param message
      */
-    void onMessage(UserMessage message);
+    void onMessage(Message message);
 }

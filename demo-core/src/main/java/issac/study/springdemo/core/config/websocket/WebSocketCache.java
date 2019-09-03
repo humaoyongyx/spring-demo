@@ -2,6 +2,7 @@ package issac.study.springdemo.core.config.websocket;
 
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,6 +65,26 @@ public class WebSocketCache {
             return sessionCache.get(sessionId);
         }
         return null;
+    }
+
+    /**
+     * 通过sessionId获取WebSocketSession
+     * @param sessionId
+     * @return
+     */
+    public WebSocketSession getSessionCacheBySessionId(String sessionId) {
+        if (sessionId != null) {
+            return sessionCache.get(sessionId);
+        }
+        return null;
+    }
+
+    /**
+     * 获取所有的session
+     * @return
+     */
+    public Collection<WebSocketSession> getAllSessionCache(){
+        return sessionCache.values();
     }
 
 }

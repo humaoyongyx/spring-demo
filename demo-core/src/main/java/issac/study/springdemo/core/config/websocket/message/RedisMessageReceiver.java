@@ -1,7 +1,7 @@
 package issac.study.springdemo.core.config.websocket.message;
 
 import com.alibaba.fastjson.JSON;
-import issac.study.springdemo.core.config.websocket.UserMessage;
+import issac.study.springdemo.core.config.websocket.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -27,9 +27,9 @@ public class RedisMessageReceiver implements ApplicationContextAware {
 
     public void onMessage(String msg) {
         logger.debug("onMessage:{}",msg);
-        UserMessage userMessage = JSON.parseObject(msg, UserMessage.class);
+        Message message = JSON.parseObject(msg, Message.class);
         try {
-            iMessageListeners.stream().forEach(it->it.onMessage(userMessage));
+            iMessageListeners.stream().forEach(it->it.onMessage(message));
         }catch (Exception e){
             logger.error("onMessage error:",e);
         }

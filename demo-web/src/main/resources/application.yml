@@ -37,3 +37,7 @@ management:
 logging:
   level:
       issac.study.springdemo: debug
+
+mro:
+       websocket:
+                 enable: true

@@ -36,7 +36,7 @@ public class UserMessage implements Serializable {
 
     @Override
     public String toString() {
-        return "UserMessage{" +
+        return "Message{" +
                 "code='" + code + '\'' +
                 ", message='" + message + '\'' +
                 '}';

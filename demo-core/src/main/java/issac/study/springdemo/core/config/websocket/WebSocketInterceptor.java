@@ -27,8 +27,8 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, org.springframework.web.socket.WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest request = (ServletServerHttpRequest) serverHttpRequest;
-            String user = request.getServletRequest().getParameter("userId");
-            map.put("userId", user);
+            String user = request.getServletRequest().getParameter(WebSocketConstants.USER_ID);
+            map.put(WebSocketConstants.USER_ID, user);
             return true;
         } else {
             return false;
