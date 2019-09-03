@@ -1,6 +1,5 @@
 package issac.study.springdemo.web.service;
 
-import issac.study.springdemo.core.config.websocket.MyWebSocketHandler;
 import issac.study.springdemo.web.bean.UserMessage;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
@@ -21,11 +20,6 @@ public class Receiver {
     @RabbitHandler
     public void receiveSocket(@Payload UserMessage userMessage) throws Exception{
         System.out.println("消息内容："+userMessage);
-        try {
-            MyWebSocketHandler.sendMessage("Tony",userMessage.getMessage()+",port："+serverPort);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
     }
 

@@ -7,8 +7,10 @@ import java.io.Serializable;
  */
 public class UserMessage implements Serializable {
 
+    private String id;
     private String code;
     private String message;
+    private String tenantId;
 
     public UserMessage(){}
     public UserMessage(String code, String message) {

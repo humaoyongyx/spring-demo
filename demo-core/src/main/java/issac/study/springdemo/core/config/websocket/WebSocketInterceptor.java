@@ -1,7 +1,5 @@
 package issac.study.springdemo.core.config.websocket;
 
-
-
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -9,18 +7,28 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import java.util.Map;
 
+/**
+ * @author  hmy
+ * 前段将用户id传过来绑定session
+ */
 public class WebSocketInterceptor implements HandshakeInterceptor {
 
     /**
-     * handler处理前调用,attributes属性最终在WebSocketSession里,可能通过webSocketSession.getAttributes().get(key值)获得
+     * map设置的值可以通过WebSocketSession获取
+     * 将前段设置的值存储
+     * @param serverHttpRequest
+     * @param serverHttpResponse
+     * @param webSocketHandler
+     * @param map
+     * @return
+     * @throws Exception
      */
     @Override
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse, org.springframework.web.socket.WebSocketHandler webSocketHandler, Map<String, Object> map) throws Exception {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest request = (ServletServerHttpRequest) serverHttpRequest;
-            // 获取请求路径携带的参数
-            String user = request.getServletRequest().getParameter("user");
-            map.put("user", user);
+            String user = request.getServletRequest().getParameter("userId");
+            map.put("userId", user);
             return true;
         } else {
             return false;
