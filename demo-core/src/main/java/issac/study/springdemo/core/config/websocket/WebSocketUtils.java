@@ -13,12 +13,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author humy6
+ *
+ * 此类是向本地建立的websocket session发送消息的类
  */
 public final class WebSocketUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketUtils.class);
 
     private static WebSocketCache webSocketCache = WebSocketCache.getInstance();
+    /**
+     * userMessageBlockingQueue 是向具体用户发送消息的处理队列
+     * messageBlockingQueue 群发的队列
+     */
     private static BlockingQueue<UserMessage> userMessageBlockingQueue = new LinkedBlockingQueue();
     private static BlockingQueue<UserMessage> messageBlockingQueue = new LinkedBlockingQueue();
 

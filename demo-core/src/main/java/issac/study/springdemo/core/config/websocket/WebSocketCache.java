@@ -35,6 +35,9 @@ public class WebSocketCache {
      */
     public void saveSession(WebSocketSession session) {
         String userId = String.valueOf(session.getAttributes().get(WebSocketConstants.USER_ID));
+        //通过网关设置头信息
+        String userId1 = session.getHandshakeHeaders().getFirst("userId");
+        System.out.println("gateway:"+userId1);
         String sessionId = session.getId();
         sessionCache.put(sessionId, session);
         sessionUserCache.put(sessionId, userId);
